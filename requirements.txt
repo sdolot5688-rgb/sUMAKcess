@@ -2,3 +2,8 @@ streamlit
 folium
 streamlit-folium
 pandas
+streamlit
+streamlit-folium
+folium
+geopy
+
