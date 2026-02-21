@@ -56,7 +56,7 @@ h1, h2, h3 {
 
 st.set_page_config(page_title="sUMAKcess", layout="wide")
 
-t.markdown("""
+st.markdown("""
 <h1 style='text-align: center; font-size: 50px;'>
 🚀 sUMAKcess            
 </h1>
@@ -159,4 +159,5 @@ elif menu == "Report Accessibility Problem":
             st.success("Report Submitted for Community Validation")
 
     st.markdown('</div>', unsafe_allow_html=True)
+
 
