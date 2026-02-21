@@ -1,87 +1,85 @@
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
+from geopy.geocoders import Nominatim
 
-st.set_page_config(page_title="sUMAKcess", layout="wide")
+st.set_page_config(page_title="sUMAKcess PH", layout="wide")
 
-# ------------------ SIDEBAR MENU ------------------
-st.sidebar.title("☰ sUMAKcess Menu")
-page = st.sidebar.radio(
-    "Navigate",
-    ["Home", "Emergency SOS", "Healthcare", "About"]
+# ---------------- HOME PAGE ----------------
+st.title("♿ sUMAKcess PH")
+
+menu = st.radio(
+    "Navigation",
+    ["Home", "Accessibility Explorer", "Submit Report", "Healthcare", "Emergency SOS"],
+    horizontal=True
 )
 
-# ------------------ HOME (WAZE STYLE) ------------------
-if page == "Home":
+# ---------------- HOME ----------------
+if menu == "Home":
+    st.subheader("How can we help today?")
 
-    st.title("♿ sUMAKcess")
+    col1, col2 = st.columns(2)
 
-    # Search Bar (Main Feature)
-    search = st.text_input("🔎 Find accessible place...")
+    with col1:
+        if st.button("🚨 EMERGENCY SOS", use_container_width=True):
+            st.warning("Emergency Alert Sent (Demo Mode)")
+
+    with col2:
+        if st.button("🔎 Find Accessible Places", use_container_width=True):
+            st.session_state.page = "Accessibility Explorer"
 
     st.divider()
 
-    # Map
+    st.write("Quick Actions:")
+    st.button("📝 Submit Accessibility Report")
+    st.button("🏥 Accessible Healthcare")
+
+# ---------------- MAP ----------------
+elif menu == "Accessibility Explorer":
     st.subheader("Accessibility Map")
 
     m = folium.Map(location=[14.312, 121.111], zoom_start=14)
 
-    # Example marker
     folium.Marker(
         [14.312, 121.111],
-        popup="♿ Accessible Ramp - Santa Rosa",
-        tooltip="Accessible Ramp"
+        popup="Accessible Ramp - Santa Rosa"
     ).add_to(m)
 
-    map_data = st_folium(m, width=1200, height=500)
+    st_folium(m, width=900, height=500)
 
-    st.divider()
+# ---------------- REPORT ----------------
+elif menu == "Submit Report":
+    st.subheader("Submit Accessibility Report")
 
-    # Floating-like Action Section
-    st.subheader("Quick Actions")
+    location_option = st.radio(
+        "Choose Location Method",
+        ["Use My Current Location", "Search Location"]
+    )
 
-    col1, col2, col3 = st.columns(3)
+    if location_option == "Search Location":
+        address = st.text_input("Enter Address")
+        if address:
+            geolocator = Nominatim(user_agent="sumakcess")
+            location = geolocator.geocode(address)
+            if location:
+                st.success(f"Latitude: {location.latitude}")
+                st.success(f"Longitude: {location.longitude}")
 
-    with col1:
-        if st.button("➕ Submit Report", use_container_width=True):
-            st.session_state.page = "report"
+    issue = st.text_area("Describe the accessibility issue")
 
-    with col2:
-        if st.button("🚨 Emergency SOS", use_container_width=True):
-            st.session_state.page = "Emergency SOS"
+    if st.button("Submit Report"):
+        st.success("Report Submitted (Demo Mode)")
 
-    with col3:
-        if st.button("🏥 Healthcare", use_container_width=True):
-            st.session_state.page = "Healthcare"
+# ---------------- HEALTHCARE ----------------
+elif menu == "Healthcare":
+    st.subheader("Accessible Healthcare Services")
 
-# ------------------ SOS ------------------
-elif page == "Emergency SOS":
+    st.write("🏥 Santa Rosa Community Hospital")
+    st.write("♿ Wheelchair accessible entrance")
 
-    st.title("🚨 Emergency SOS")
+# ---------------- SOS ----------------
+elif menu == "Emergency SOS":
+    st.subheader("Emergency SOS")
 
-    st.warning("Use only during real emergencies.")
-
-    if st.button("SEND SOS ALERT", use_container_width=True):
-        st.error("SOS Alert Sent (Demo Mode)")
-
-# ------------------ HEALTHCARE ------------------
-elif page == "Healthcare":
-
-    st.title("🏥 Accessible Healthcare")
-
-    st.success("Nearby Accessible Hospitals")
-
-    st.write("• Santa Rosa Community Hospital")
-    st.write("• Medical City South Luzon")
-    st.write("• Accessible Pharmacy")
-
-# ------------------ ABOUT ------------------
-elif page == "About":
-
-    st.title("About sUMAKcess")
-
-    st.write("""
-    sUMAKcess is a smart accessibility navigation platform
-    designed to help persons with disabilities and seniors
-    find accessible locations and stay safe.
-    """)
+    if st.button("SEND SOS ALERT"):
+        st.error("SOS Alert Triggered (Demo Mode)")
