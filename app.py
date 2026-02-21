@@ -3,10 +3,10 @@ import folium
 from streamlit_folium import st_folium
 from geopy.geocoders import Nominatim
 
-st.set_page_config(page_title="sUMAKcess PH", layout="wide")
+st.set_page_config(page_title="sUMAKcess", layout="wide")
 
 # ---------------- HOME PAGE ----------------
-st.title("♿ sUMAKcess PH")
+st.title("♿ sUMAKcess")
 
 menu = st.radio(
     "Navigation",
@@ -83,3 +83,4 @@ elif menu == "Emergency SOS":
 
     if st.button("SEND SOS ALERT"):
         st.error("SOS Alert Triggered (Demo Mode)")
+
